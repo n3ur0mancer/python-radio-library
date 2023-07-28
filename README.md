@@ -52,7 +52,7 @@ It takes the following parameters:
 | granularity_meters | The distance between intermediate data points (in meters) |
 
 How it works: 
-1. The distance and intermediate steps between the two points are calculated in the `coordinates_interpolation.py` module.
+1. The distance and amount of intermediate steps between the two points are calculated in the `coordinates_interpolation.py` module.
 2. The coordinates of the intermediate steps are being interpolated in the same `coordinates_interpolation.py` module.
 3. The elevation data for all the coordinates are being fetched from the API of https://open-elevation.com/ in the `coordinates_elevation_fetcher.py` module.
 4. The elevation is being plotted with Matplotlib Pyplot in the `elevation_profile_plotter.py` module.
