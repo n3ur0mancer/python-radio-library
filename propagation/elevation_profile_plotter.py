@@ -17,10 +17,12 @@ class ElevationProfilePlotter:
         latitudes = [item['latitude'] for item in elevation_data]
         elevations = [item['elevation'] for item in elevation_data]
 
-        # plt.fill_between(latitudes, elevations, color='#FFA500', alpha=0.75)
         plt.figure(facecolor="#000000")
         ax = plt.axes()
         ax.set_facecolor("#000000")
+
+        plt.fill_between(latitudes, elevations, color='#FFA500', alpha=0.15)
+
         plt.grid(True, linestyle='dashed', linewidth=0.5, color='gray')
 
         spines = plt.gca().spines
@@ -39,9 +41,10 @@ class ElevationProfilePlotter:
 
         plt.legend(facecolor="black", labelcolor="white", prop={'family': 'Roboto'})
         plt.xlim(min(latitudes), max(latitudes))
+        plt.ylim((min(elevations)-(min(elevations)/100)), (max(elevations)+(max(elevations)/100)))
 
         plt.show()
 
 
-new_plotter = ElevationProfilePlotter(47.502136, 9.235879, 47.711853, 9.647965, 200)
+new_plotter = ElevationProfilePlotter(47.502136, 9.235879, 47.711853, 9.647965, 100)
 new_plotter.plot_elevation_profile()
