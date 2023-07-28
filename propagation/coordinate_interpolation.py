@@ -43,16 +43,9 @@ class CoordinateInterpolation:
         latitude_interpolated = self.latitude_point_a + t_values * (self.latitude_point_b - self.latitude_point_a)
         longitude_interpolated = self.longitude_point_a + t_values * (self.longitude_point_b - self.longitude_point_a)
 
-        interpolated_coordinates = list(zip(latitude_interpolated, longitude_interpolated))
+        interpolated_coordinates = [{"latitude": lat, "longitude": lon} for lat, lon in zip(latitude_interpolated, longitude_interpolated)]
 
         return interpolated_coordinates
 
 
-interpolator = CoordinateInterpolation(47.684282, 9.640046, 47.652013, 9.525812, 1000)
 
-distance_km = interpolator.calculate_distance_km()
-number_of_points = interpolator.calculate_number_of_points()
-interpolated_coordinates = interpolator.interpolate_coordinates()
-
-print(distance_km, number_of_points)
-print(interpolated_coordinates)
