@@ -37,7 +37,7 @@ It takes the following parameters:
 
 ### Visualizing the line of sight between two points
 
-![elevation_profile](https://github.com/n3ur0mancer/python-radio-library/assets/46748400/29a05784-417f-4031-8f29-e319a9727e61)
+![elevation_profile](https://github.com/n3ur0mancer/python-radio-library/assets/46748400/d218544e-aab2-4ef7-beeb-072653690305)
 
 You can visualize the elevation profile between two points using their latitude & longitude coordinates.
 
