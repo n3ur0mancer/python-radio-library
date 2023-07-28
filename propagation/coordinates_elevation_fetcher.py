@@ -11,7 +11,7 @@ class CoordinateElevationFetcher:
         self.granularity_meters = granularity_meters
 
     def interpolate_coordinates(self):
-        new_instance = coordinate_interpolation.CoordinateInterpolation(self.latitude_point_a, self.longitude_point_a,
+        new_instance = coordinates_interpolation.CoordinateInterpolation(self.latitude_point_a, self.longitude_point_a,
                                                                         self.latitude_point_b, self.longitude_point_b,
                                                                         self.granularity_meters)
         return new_instance.interpolate_coordinates()
