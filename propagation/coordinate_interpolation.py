@@ -46,6 +46,3 @@ class CoordinateInterpolation:
         interpolated_coordinates = [{"latitude": lat, "longitude": lon} for lat, lon in zip(latitude_interpolated, longitude_interpolated)]
 
         return interpolated_coordinates
-
-
-
