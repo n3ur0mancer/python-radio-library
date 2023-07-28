@@ -1,4 +1,4 @@
-import coordinate_interpolation
+import coordinates_interpolation
 import requests
 
 
