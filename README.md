@@ -31,7 +31,7 @@ It takes the following parameters:
 | distance_receiver_obstruction    | Distance between the receiver and the obstruction (in meters)    |
 | distance_transmitter_obstruction | Distance between the transmitter and the obstruction (in meters) |
 | height_obstruction               | Height of the obstruction (in meters)                            |
-| wavelength_meter                 | Wavelength of the signal in meters                               |
+| wavelength_meter                 | Wavelength of the signal in meters (default value of 100 m)      |
 
 ---
 
@@ -51,7 +51,7 @@ It takes the following parameters:
 | longitude_point_a  | Longitude of point A (ex. 9.235879)                       |
 | latitude_point_b   | Latitude of point B                                       |
 | longitude_point_b  | Longitude of point B                                      |
-| granularity_meters | The distance between intermediate data points (in meters) |
+| granularity_meters | The distance between intermediate data points (in meters). Ddefault value of 100 m. |
 
 How it works: 
 1. The distance and amount of intermediate steps between the two points are calculated in the `coordinates_interpolation.py` module.
