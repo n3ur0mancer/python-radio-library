@@ -31,7 +31,7 @@ It takes the following parameters:
 | distance_receiver_obstruction    | Distance between the receiver and the obstruction (in meters)    |
 | distance_transmitter_obstruction | Distance between the transmitter and the obstruction (in meters) |
 | height_obstruction               | Height of the obstruction (in meters)                            |
-| wavelength_meter                 | Wavelength of the signal in meters (default value of 100 m)      |
+| wavelength_meter                 | Wavelength of the signal (in meters)      |
 
 ---
 
