@@ -3,7 +3,47 @@ import coordinates_elevation_fetcher
 
 
 class ElevationProfilePlotter:
+    """
+    A class to represent a plotter for the elevation profile between two points.
+
+    ...
+
+    Attributes
+    ----------
+    latitude_point_a : float
+        latitude of point a
+    longitude_point_a : float
+        longitude of point a
+    latitude_point_b : float
+        latitude of point b
+    longitude_point_b : float
+        longitude of point b
+    granularity_meters : float
+        distance between steps in meters
+
+    Methods
+    -------
+    plot_elevation_profile():
+        plots the elevation profile 
+    """
+
     def __init__(self, latitude_point_a, longitude_point_a, latitude_point_b, longitude_point_b, granularity_meters):
+        """
+        Constructs all the necessary attributes for the ElevationProfilePlotter object.
+
+        Parameters
+        ----------
+            latitude_point_a : float
+                latitude of point a
+            longitude_point_a : float
+                longitude of point a
+            latitude_point_b : float
+                latitude of point b
+            longitude_point_b : float
+                longitude of point b
+            granularity_meters : float
+                distance between steps in meters
+        """
         self.latitude_point_a = latitude_point_a
         self.longitude_point_a = longitude_point_a
         self.latitude_point_b = latitude_point_b
@@ -11,7 +51,21 @@ class ElevationProfilePlotter:
         self.granularity_meters = granularity_meters
 
     def plot_elevation_profile(self):
-        data_fetcher = coordinates_elevation_fetcher.CoordinateElevationFetcher(self.latitude_point_a, self.longitude_point_a, self.latitude_point_b, self.longitude_point_b, self.granularity_meters)
+        """
+        Plots the elevation profile between two points using plyplot.
+
+        If the argument 'additional' is passed, then it is appended after the main info.
+
+        Parameters
+        ----------
+        Does not take additional arguments.
+
+        Returns
+        -------
+        None
+        """
+        data_fetcher = coordinates_elevation_fetcher.CoordinateElevationFetcher(
+            self.latitude_point_a, self.longitude_point_a, self.latitude_point_b, self.longitude_point_b, self.granularity_meters)
         elevation_data = data_fetcher.get_elevation_data()
 
         latitudes = [item['latitude'] for item in elevation_data]
@@ -31,20 +85,25 @@ class ElevationProfilePlotter:
             spine.set_color('white')
             spine.set_linestyle('-')
 
-        plt.plot(latitudes, elevations, color='#FFA500', linewidth=0.5, clip_on=True, label='Elevation')
+        plt.plot(latitudes, elevations, color='#FFA500',
+                 linewidth=0.5, clip_on=True, label='Elevation')
 
-        plt.title('Elevation along Latitude', color='white', loc='left', font="Roboto", fontsize=15)
+        plt.title('Elevation along Latitude', color='white',
+                  loc='left', font="Roboto", fontsize=15)
         plt.xlabel('Latitude', color='white', font="Roboto")
         plt.xticks(color='white', font="Roboto")
         plt.ylabel('Elevation (meters)', color='white', font="Roboto")
         plt.yticks(color='white', font="Roboto")
 
-        plt.legend(facecolor="black", labelcolor="white", prop={'family': 'Roboto'})
+        plt.legend(facecolor="black", labelcolor="white",
+                   prop={'family': 'Roboto'})
         plt.xlim(min(latitudes), max(latitudes))
-        plt.ylim((min(elevations)-(min(elevations)/100)), (max(elevations)+(max(elevations)/100)))
+        plt.ylim((min(elevations)-(min(elevations)/100)),
+                 (max(elevations)+(max(elevations)/100)))
 
         plt.show()
 
 
-new_plotter = ElevationProfilePlotter(47.502136, 9.235879, 47.711853, 9.647965, 100)
+new_plotter = ElevationProfilePlotter(
+    47.502136, 9.235879, 47.711853, 9.647965, 100)
 new_plotter.plot_elevation_profile()
