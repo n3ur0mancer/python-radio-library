@@ -6,6 +6,8 @@ class CoordinateInterpolation:
     """
     A class to represent the coordinate interpolation process.
 
+    The granularity_meters has a default argument of 100 m.
+
     ...
 
     Attributes
@@ -31,7 +33,7 @@ class CoordinateInterpolation:
         interpolates the coordinates of the intermediate points
     """
 
-    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float = 100):
         """
         Constructs all the necessary attributes for the CoordinateInterpolation object.
 

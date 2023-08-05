@@ -6,6 +6,8 @@ class CoordinateElevationFetcher:
     """
     A class to represent a fetcher for elevations of coordinates.
 
+    The granularity_meters has a default argument of 100 m.
+
     ...
 
     Attributes
@@ -31,7 +33,7 @@ class CoordinateElevationFetcher:
         Takes in longitude, latitude and elevation for all points, returns complete dictionary.
     """
 
-    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float = 100):
         """
         Constructs all the necessary attributes for the CoordinateElevationFetcher object.
 

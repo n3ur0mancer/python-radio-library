@@ -6,6 +6,8 @@ class ElevationProfilePlotter:
     """
     A class to represent a plotter for the elevation profile between two points.
 
+    The granularity_meters has a default argument of 100 m.
+
     ...
 
     Attributes
@@ -27,7 +29,7 @@ class ElevationProfilePlotter:
         plots the elevation profile 
     """
 
-    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float = 100):
         """
         Constructs all the necessary attributes for the ElevationProfilePlotter object.
 
@@ -105,5 +107,5 @@ class ElevationProfilePlotter:
 
 
 new_plotter = ElevationProfilePlotter(
-    47.502136, 9.235879, 47.711853, 9.647965, 100)
+    47.502136, 9.235879, 47.711853, 9.647965)
 new_plotter.plot_elevation_profile()
