@@ -27,7 +27,7 @@ class ElevationProfilePlotter:
         plots the elevation profile 
     """
 
-    def __init__(self, latitude_point_a, longitude_point_a, latitude_point_b, longitude_point_b, granularity_meters):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
         """
         Constructs all the necessary attributes for the ElevationProfilePlotter object.
 

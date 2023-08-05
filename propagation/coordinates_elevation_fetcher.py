@@ -31,7 +31,7 @@ class CoordinateElevationFetcher:
         Takes in longitude, latitude and elevation for all points, returns complete dictionary.
     """
 
-    def __init__(self, latitude_point_a, longitude_point_a, latitude_point_b, longitude_point_b, granularity_meters):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
         """
         Constructs all the necessary attributes for the CoordinateElevationFetcher object.
 
@@ -54,7 +54,7 @@ class CoordinateElevationFetcher:
         self.longitude_point_b = longitude_point_b
         self.granularity_meters = granularity_meters
 
-    def interpolate_coordinates(self):
+    def interpolate_coordinates(self) -> dict:
         """
         Interpolates the steps in between point a and b, returns the interpolated points.
 
@@ -71,7 +71,7 @@ class CoordinateElevationFetcher:
                                                                          self.granularity_meters)
         return new_instance.interpolate_coordinates()
 
-    def get_elevation(self, locations):
+    def get_elevation(self, locations) -> list:
         """
         Takes all points, fetches and returns the elevation data.
 
@@ -96,7 +96,7 @@ class CoordinateElevationFetcher:
             print(f"Error occurred: {e}")
             return None
 
-    def get_elevation_data(self):
+    def get_elevation_data(self) -> dict:
         """
         Takes the longitude and latitude of the points and adds the elevation.
 

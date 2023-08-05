@@ -24,7 +24,7 @@ class KnifeEdgeDiffraction:
         Calculates the Knife Edge Diffraction.
     """
 
-    def __init__(self, distance_receiver_obstruction, distance_transmitter_obstruction, height_obstruction, wavelength_meter):
+    def __init__(self, distance_receiver_obstruction: int, distance_transmitter_obstruction: int, height_obstruction: int, wavelength_meter: float):
         """
         Constructs all the necessary attributes for the KnifeEdgeDiffraction object.
 
@@ -36,7 +36,7 @@ class KnifeEdgeDiffraction:
                 distance between the transmitter and the obstruction
             height_obstruction : int
                 height of the obstruction
-            wavelength_meter : int
+            wavelength_meter : float
                 size of the wavelength in meter
         """
         self.distance_receiver_obstruction = distance_receiver_obstruction
@@ -44,7 +44,7 @@ class KnifeEdgeDiffraction:
         self.height_obstruction = height_obstruction
         self.wavelength_meter = wavelength_meter
 
-    def calc_knife_edge_diffraction(self):
+    def calc_knife_edge_diffraction(self) -> float:
         """
         Calculates the Knife edge diffraction.
 
@@ -56,12 +56,16 @@ class KnifeEdgeDiffraction:
         -------
         Returns the Fresnel Diffraction Parameter as a float.
         """
-        fresnel_diffraction_parameter = self.height_obstruction * (
-            math.sqrt((2 * (self.distance_transmitter_obstruction + self.distance_receiver_obstruction))
-                      / (self.wavelength_meter * self.distance_transmitter_obstruction * self.distance_receiver_obstruction))
-        )
-        return fresnel_diffraction_parameter
+        try:
+            fresnel_diffraction_parameter = self.height_obstruction * (
+                math.sqrt((2 * (self.distance_transmitter_obstruction + self.distance_receiver_obstruction))
+                          / (self.wavelength_meter * self.distance_transmitter_obstruction * self.distance_receiver_obstruction))
+            )
+            return fresnel_diffraction_parameter
+        except:
+            print(
+                "Please provide only integer (round) numbers for the distance and height.")
 
 
-test = KnifeEdgeDiffraction(1000, 1000, 20, 0.7)
+test = KnifeEdgeDiffraction(100, 1000, 20, 0.7)
 print(test.calc_knife_edge_diffraction())

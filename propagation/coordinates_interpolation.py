@@ -31,7 +31,7 @@ class CoordinateInterpolation:
         interpolates the coordinates of the intermediate points
     """
 
-    def __init__(self, latitude_point_a, longitude_point_a, latitude_point_b, longitude_point_b, granularity_meters):
+    def __init__(self, latitude_point_a: float, longitude_point_a: float, latitude_point_b: float, longitude_point_b: float, granularity_meters: float):
         """
         Constructs all the necessary attributes for the CoordinateInterpolation object.
 
@@ -54,7 +54,7 @@ class CoordinateInterpolation:
         self.longitude_point_b = longitude_point_b
         self.granularity_meters = granularity_meters
 
-    def calculate_distance_km(self):
+    def calculate_distance_km(self) -> float:
         """
         Calculates the distance in km between two given points.
 
@@ -85,7 +85,7 @@ class CoordinateInterpolation:
 
         return distance_km_points
 
-    def calculate_number_of_points(self):
+    def calculate_number_of_points(self) -> int:
         """
         Calculates the amount of intermediate points.
 
@@ -102,7 +102,7 @@ class CoordinateInterpolation:
 
         return number_of_points
 
-    def interpolate_coordinates(self):
+    def interpolate_coordinates(self) -> dict:
         """
         Interpolates the coordinates of the intermediate points.
 

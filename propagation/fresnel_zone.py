@@ -20,7 +20,7 @@ class FresnelZone:
         Calculates the Fresnel Zone between two points.
     """
 
-    def __init__(self, wavelength_meter, distance_meter):
+    def __init__(self, wavelength_meter: float, distance_meter: float):
         """
         Constructs all the necessary attributes for the FresnelZone object.
 
@@ -34,7 +34,7 @@ class FresnelZone:
         self.wavelength_meter = wavelength_meter
         self.distance_meter = distance_meter
 
-    def calc_fresnel_zone(self):
+    def calc_fresnel_zone(self) -> float:
         """
         Calculates the Fresnel Zone.
 
@@ -46,13 +46,24 @@ class FresnelZone:
         -------
         Returns the Fresnel Zone in meters as a float.
         """
-        return ((math.sqrt(self.wavelength_meter * self.distance_meter)) / 2) * 0.6
+        try:
+            fresnel_zone = (
+                (math.sqrt(self.wavelength_meter * self.distance_meter)) / 2) * 0.6
+            return fresnel_zone
+        except:
+            print("Please only provide numbers.")
 
 
-input_wavelength_meter = float(input("Wavelength in meter: "))
-input_distance_meter = float(input("Distance between stations in meter: "))
+try:
+    input_wavelength_meter = float(input("Wavelength in meter: "))
+    input_distance_meter = float(input("Distance between stations in meter: "))
+except ValueError:
+    print("The input you provided was not a number.")
 
-new_fresnel_zone = FresnelZone(input_wavelength_meter, input_distance_meter)
-fresnel_result = new_fresnel_zone.calc_fresnel_zone()
-
-print(f"The Fresnel Zone is: {round(fresnel_result, 2)} m")
+try:
+    new_fresnel_zone = FresnelZone(
+        input_wavelength_meter, input_distance_meter)
+    fresnel_result = new_fresnel_zone.calc_fresnel_zone()
+    print(f"The Fresnel Zone is: {round(fresnel_result, 2)} m")
+except NameError:
+    print("Please only provide numbers.")
