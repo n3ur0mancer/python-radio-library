@@ -80,24 +80,37 @@ class SeasonalVariationF2:
         return seasonal_variation_F2
 
 
-class NeustrelitzPeakElectronModel:
+class NeustrelitzPeakDensityModel:
     def __init__(self, local_time_F1: float, seasonal_variation_F2: float):
         self.local_time_F1 = local_time_F1
         self.seasonal_variation_F2 = seasonal_variation_F2
 
+    def calculate_neustrelitz_peak_electron_model(self):
+        neustrelitz_peak_electron_model = self.local_time_F1 * self.seasonal_variation_F2
+        return neustrelitz_peak_electron_model
+
 
 # Testing the classes
+
+# defining the variables
 local_time_hours = 18
 latitude_radians = 0.9730
 sun_declination_radians = 0.8712
 day_of_year = 258
 coefficients = [1, 2, 3, 4, 5, 6, 7, 8]
 
+# Testing the LocalTimeF1 class & calculation
 test_F1 = LocalTimeF1(local_time_hours, latitude_radians,
                       sun_declination_radians, day_of_year, coefficients)
 results_F1 = test_F1.calculate_local_time_F1()
 print(results_F1)
 
+# Testing the SeasonalVariationF2 class & calculation
 test_F2 = SeasonalVariationF2(day_of_year, coefficients)
 results_F2 = test_F2.calculate_seasonal_variation_F2()
 print(results_F2)
+
+# Testing the NeustrelitzPeakElectronModel class & calculation
+test_peak_electron_model = NeustrelitzPeakDensityModel(results_F1, results_F2)
+results_peak_electron_model = test_peak_electron_model.calculate_neustrelitz_peak_electron_model()
+print(results_peak_electron_model)
