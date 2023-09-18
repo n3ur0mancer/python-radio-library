@@ -80,6 +80,12 @@ class SeasonalVariationF2:
         return seasonal_variation_F2
 
 
+class GeomagneticFieldDependencyF3:
+    def __init__(self, geommagnetic_latitude: float, coefficients: list):
+        self.geommagnetic_latitude = geommagnetic_latitude
+        self.coefficients = coefficients
+
+
 class NeustrelitzPeakDensityModel:
     def __init__(self, local_time_F1: float, seasonal_variation_F2: float):
         self.local_time_F1 = local_time_F1
@@ -94,10 +100,11 @@ class NeustrelitzPeakDensityModel:
 
 # defining the variables
 local_time_hours = 18
-latitude_radians = 0.9730
+latitude_radians = 0.867
+geommagnetic_latitude = 0.049
 sun_declination_radians = 0.8712
 day_of_year = 258
-coefficients = [1, 2, 3, 4, 5, 6, 7, 8]
+coefficients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 # Testing the LocalTimeF1 class & calculation
 test_F1 = LocalTimeF1(local_time_hours, latitude_radians,
