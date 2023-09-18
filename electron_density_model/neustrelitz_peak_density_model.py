@@ -124,20 +124,33 @@ class IonizationCrestsF4:
         ionization_crest_1 = self.calculate_ionization_crest_1()
         ionization_crest_2 = self.calculate_ionization_crest_2()
         ionization_crest_F4 = 1 + self.coefficients[9] * math.exp(
-            ionization_crest_1) + coefficients[10] * math.exp(ionization_crest_2)
+            ionization_crest_1) + self.coefficients[10] * math.exp(ionization_crest_2)
         return ionization_crest_F4
 
 
+class SolarActivityF5:
+    def __init__(self, solar_flux_F107: float, coefficients: list):
+        self.solar_flux_F107 = solar_flux_F107
+        self.coefficients = coefficients
+
+    def calculate_solar_activity_F5(self) -> float:
+        solar_activity_F5 = self.coefficients[11] + \
+            self.coefficients[12] * self.solar_flux_F107
+        return solar_activity_F5
+
+
 class NeustrelitzPeakDensityModel:
-    def __init__(self, local_time_F1: float, seasonal_variation_F2: float, geomagentic_field_dependency_F3: float, ionization_crest_F4: float):
+    def __init__(self, local_time_F1: float, seasonal_variation_F2: float, geomagentic_field_dependency_F3: float, ionization_crest_F4: float, solar_activity_F5: float):
         self.local_time_F1 = local_time_F1
         self.seasonal_variation_F2 = seasonal_variation_F2
         self.geomagentic_field_dependency_F3 = geomagentic_field_dependency_F3
         self.ionization_crest_F4 = ionization_crest_F4
+        self.solar_activity_F5 = solar_activity_F5
 
     def calculate_neustrelitz_peak_electron_model(self) -> float:
         neustrelitz_peak_electron_model = self.local_time_F1 * self.seasonal_variation_F2 * \
-            self.geomagentic_field_dependency_F3 * self.ionization_crest_F4
+            self.geomagentic_field_dependency_F3 * \
+            self.ionization_crest_F4 * self.solar_activity_F5
         return neustrelitz_peak_electron_model
 
 
@@ -150,6 +163,7 @@ geommagnetic_latitude = 0.049
 sun_declination_radians = 0.8712
 day_of_year = 258
 coefficients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+solar_flux_F107 = 1.5
 
 # Testing the LocalTimeF1 class & calculation
 test_F1 = LocalTimeF1(local_time_hours, latitude_radians,
@@ -173,9 +187,15 @@ test_F4 = IonizationCrestsF4(
 result_F4 = test_F4.calculate_ionization_crest_F4()
 print(result_F4)
 
+# Testing the IonizationCrestsF4 class & calculation
+test_F5 = SolarActivityF5(
+    solar_flux_F107, coefficients)
+result_F5 = test_F5.calculate_solar_activity_F5()
+print(result_F5)
+
 
 # Testing the NeustrelitzPeakElectronModel class & calculation
 test_peak_electron_model = NeustrelitzPeakDensityModel(
-    results_F1, results_F2, results_F3, result_F4)
+    results_F1, results_F2, results_F3, result_F4, result_F5)
 results_peak_electron_model = test_peak_electron_model.calculate_neustrelitz_peak_electron_model()
 print(results_peak_electron_model)
