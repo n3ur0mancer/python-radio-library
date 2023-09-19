@@ -10,37 +10,56 @@ class LocalTimeF1:
         self.coefficients = coefficients
 
     # method calculates diurnal, semi-diurnal, and ter-diurnal harmonic components related to variations in local time
+
     def calculate_local_time_variations(self) -> float:
         phase_shift = 14
+
         variation_diurnal = (
             2 * math.pi * (self.local_time_hours - phase_shift)) / 24
         variation_semi_diurnal = (2 * math.pi * self.local_time_hours) / 12
         variation_ter_diurnal = (2 * math.pi * self.local_time_hours) / 8
+
         return variation_diurnal, variation_semi_diurnal, variation_ter_diurnal
 
     # method calculates various angles related to solar zenith angles based on geographic latitude and sun declination
+
     def calculate_solar_zenith_angles(self) -> float:
-        PF1 = 0.4
+        solar_zenith_angle_correction = 0.4  # PF1
+
         cos_solar_zenith_angle = (math.sin(self.latitude_radians) * math.sin(self.sun_declination_radians))+(
             math.cos(self.latitude_radians) * math.cos(self.sun_declination_radians))
+
         cos_adjusted_zenith_angle = math.cos(cos_solar_zenith_angle) - (
             ((2 * self.latitude_radians) / math.pi) * math.sin(self.sun_declination_radians))
+
         cos_further_adjusted_zenith_angle = math.cos(
-            cos_solar_zenith_angle) + PF1
+            cos_solar_zenith_angle) + solar_zenith_angle_correction
+
         return cos_adjusted_zenith_angle, cos_further_adjusted_zenith_angle
 
-    # method models the summer daytime bite-out effect using several mathematical expressions involving latitude, day of the year, and other parameters
-    def calculate_summer_daytime_bite_out(self) -> float:
-        LTBO = 13 + 1.5 * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * \
+    # method calculates the local time at the beginning of the bite out
+
+    def calculate_local_time_at_beginning_of_bite_out(self):
+        local_time_at_beginning_of_bite_out = 13 + 1.5 * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * \
             (self.latitude_radians / math.fabs(self.latitude_radians))
-        fixed_graographic_latitude = 45
+
+        return local_time_at_beginning_of_bite_out
+
+    # method models the summer daytime bite-out effect using several mathematical expressions involving latitude, day of the year, and other parameters
+
+    def calculate_summer_daytime_bite_out(self) -> float:
+        local_time_at_beginning_of_bite_out = self.calculate_local_time_at_beginning_of_bite_out()
+        fixed_geographic_latitude = 45
         gaussian_half_width_degree = 14
         gaussian_half_width_hours = 3
-        summer_daytime_bite_out = math.exp(-(((math.fabs(self.latitude_radians) - fixed_graographic_latitude**2)) / (
-            2 * gaussian_half_width_degree**2))) * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * math.exp(-((self.latitude_radians - LTBO)**2 / 2 * gaussian_half_width_hours**2)) * (self.latitude_radians / math.fabs(self.latitude_radians))
+
+        summer_daytime_bite_out = math.exp(-(((math.fabs(self.latitude_radians) - fixed_geographic_latitude**2)) / (
+            2 * gaussian_half_width_degree**2))) * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * math.exp(-((self.latitude_radians - local_time_at_beginning_of_bite_out)**2 / 2 * gaussian_half_width_hours**2)) * (self.latitude_radians / math.fabs(self.latitude_radians))
+
         return summer_daytime_bite_out
 
     # method integrates the results from the previous calculations to compute the local time variation factor F1
+
     def calculate_local_time_F1(self) -> float:
         variation_diurnal, variation_semi_diurnal, variation_ter_diurnal = self.calculate_local_time_variations()
         cos_adjusted_zenith_angle, cos_further_adjusted_zenith_angle = self.calculate_solar_zenith_angles()
@@ -48,35 +67,72 @@ class LocalTimeF1:
 
         local_time_F1 = math.cos(cos_further_adjusted_zenith_angle) + (self.coefficients[0] * math.cos(variation_diurnal) + self.coefficients[1] * math.cos(variation_semi_diurnal) + self.coefficients[2] * math.sin(
             variation_semi_diurnal) + self.coefficients[3] * math.cos(variation_ter_diurnal) + self.coefficients[4] * math.sin(variation_ter_diurnal)) * math.cos(cos_adjusted_zenith_angle) + self.coefficients[5] * summer_daytime_bite_out
+
         return local_time_F1
 
 
 class SeasonalVariationF2:
+    """
+    Calculates the seasonal variation of NmF2 (peak electron density) using the Neustrelitz Peak Density Model (NPDM).
+
+    The seasonal variation is modeled by considering two components: the annual and semi-annual variations.
+    Phase shifts of 18 days and 6 days are applied for the annual and semi-annual variations respectively, 
+    with respect to the beginning of the year.
+    """
+
     def __init__(self, day_of_year: int, coefficients: list):
+        """
+        Initializes the SeasonalVariationF2 instance with the day of the year and model coefficients.
+
+        Parameters:
+            day_of_year (int): The day of the year for which the seasonal variation is calculated.
+            coefficients (list): Coefficients used in the NPDM model for seasonal variation calculations.
+        """
         self.day_of_year = day_of_year
         self.coefficients = coefficients
 
-    # calculating the annual variation
     def calculate_annual_variation(self) -> float:
+        """
+        Calculates the annual variation component of NmF2.
+
+        Returns:
+            float: The calculated annual variation.
+        """
+
         phase_shift = 18
+
         annual_variation = (
             2 * math.pi * (self.day_of_year - phase_shift)) / 365.25
+
         return annual_variation
 
-    # calculating the semi-annual variation
     def calculate_semi_annual_variation(self) -> float:
+        """
+        Calculates the semi-annual variation component of NmF2.
+
+        Returns:
+            float: The calculated semi-annual variation.
+        """
         phase_shift = 6
+
         semi_annual_variation = (
             4 * math.pi * (self.day_of_year - phase_shift)) / 365.25
+
         return semi_annual_variation
 
-    # calculating the seasonal variation
     def calculate_seasonal_variation_F2(self) -> float:
+        """
+        Calculates the total seasonal variation of NmF2 by combining annual and semi-annual variations.
+
+        Returns:
+            float: The calculated seasonal variation of NmF2.
+        """
         annual_variation = self.calculate_annual_variation()
         semi_annual_variation = self.calculate_semi_annual_variation()
 
         seasonal_variation_F2 = 1 + (self.coefficients[6] * math.cos(
             annual_variation)) + (self.coefficients[7] * math.cos(semi_annual_variation))
+
         return seasonal_variation_F2
 
 
@@ -88,6 +144,7 @@ class GeomagneticFieldDependencyF3:
     def calculate_geomagentic_field_dependency(self) -> float:
         geomagentic_field_dependency_F3 = 1 + \
             (self.coefficients[8] * math.cos(geommagnetic_latitude))
+
         return geomagentic_field_dependency_F3
 
 
@@ -99,25 +156,31 @@ class IonizationCrestsF4:
 
     def calculate_half_widths(self) -> float:
         coefficient_local_time = 12
+
         half_width = 20 - 10 * \
             math.exp(-((self.local_time_hours - 14) **
                      2 / (2 * coefficient_local_time**2)))
+
         return half_width
 
     def calculate_ionization_crest_1(self) -> float:
         half_width = self.calculate_half_widths()
         northward_crest_degrees = 16
+
         ionization_crest_1 = - \
             ((self.geommagnetic_latitude - northward_crest_degrees)
              ** 2 / (2 * half_width**2))
+
         return ionization_crest_1
 
     def calculate_ionization_crest_2(self) -> float:
         half_width = self.calculate_half_widths()
         southward_crest_degrees = -15
+
         ionization_crest_2 = - \
             ((self.geommagnetic_latitude - southward_crest_degrees)
              ** 2 / (2 * half_width**2))
+
         return ionization_crest_2
 
     def calculate_ionization_crest_F4(self) -> float:
@@ -125,6 +188,7 @@ class IonizationCrestsF4:
         ionization_crest_2 = self.calculate_ionization_crest_2()
         ionization_crest_F4 = 1 + self.coefficients[9] * math.exp(
             ionization_crest_1) + self.coefficients[10] * math.exp(ionization_crest_2)
+
         return ionization_crest_F4
 
 
@@ -136,6 +200,7 @@ class SolarActivityF5:
     def calculate_solar_activity_F5(self) -> float:
         solar_activity_F5 = self.coefficients[11] + \
             self.coefficients[12] * self.solar_flux_F107
+
         return solar_activity_F5
 
 
@@ -151,6 +216,7 @@ class NeustrelitzPeakDensityModel:
         neustrelitz_peak_electron_model = self.local_time_F1 * self.seasonal_variation_F2 * \
             self.geomagentic_field_dependency_F3 * \
             self.ionization_crest_F4 * self.solar_activity_F5
+
         return neustrelitz_peak_electron_model
 
 
