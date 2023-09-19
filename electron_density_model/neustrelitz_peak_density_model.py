@@ -462,7 +462,7 @@ class NeustrelitzPeakDensityModel:
 TO-DOS:
 - find out what units (degrees or radians) are used in the F4 class
 - find out what the coefficients are
-- find open API sources for the data pipeline
+- find libraries & open API sources for the different variables
 - create & implement intermediary conversion functions (ex. geographic latitude to geomagnetic latitude, etc.)
 - plotting the results
 
@@ -470,14 +470,17 @@ TO-DOS:
 
 # Testing the classes
 
-# defining the variables
+# time variables
 local_time_hours = 18
+day_of_year = 258
+# location variables
 latitude_radians = 0.867
 geommagnetic_latitude = 0.049
+# sun variables
 sun_declination_radians = 0.8712
-day_of_year = 258
-coefficients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 solar_flux_F107 = 1.5
+
+coefficients = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 # Testing the LocalTimeF1 class & calculation
 test_F1 = LocalTimeF1(local_time_hours, latitude_radians,
