@@ -78,15 +78,36 @@ class SeasonalVariationF2:
     The seasonal variation is modeled by considering two components: the annual and semi-annual variations.
     Phase shifts of 18 days and 6 days are applied for the annual and semi-annual variations respectively, 
     with respect to the beginning of the year.
+
+    ...
+
+    Attributes
+    ----------
+    day_of_year : int
+        The day of the year for which the seasonal variation is calculated.
+    coefficients : list
+        Coefficients used in the NPDM model for seasonal variation calculations.
+
+    Methods
+    ----------
+    calculate_annual_variation()
+        Calculates the annual variation component of NmF2.
+    calculate_semi_annual_variation()
+        Calculates the semi-annual variation component of NmF2.
+    calculate_seasonal_variation_F2
+        Calculates the total seasonal variation of NmF2
     """
 
     def __init__(self, day_of_year: int, coefficients: list):
         """
         Initializes the SeasonalVariationF2 instance with the day of the year and model coefficients.
 
-        Parameters:
-            day_of_year (int): The day of the year for which the seasonal variation is calculated.
-            coefficients (list): Coefficients used in the NPDM model for seasonal variation calculations.
+        Parameters
+        -------
+        day_of_year : int
+            The day of the year for which the seasonal variation is calculated.
+        coefficients : list
+            Coefficients used in the NPDM model for seasonal variation calculations.
         """
         self.day_of_year = day_of_year
         self.coefficients = coefficients
@@ -95,8 +116,10 @@ class SeasonalVariationF2:
         """
         Calculates the annual variation component of NmF2.
 
-        Returns:
-            float: The calculated annual variation.
+        Returns
+        -------
+        annual_variation : float
+            The calculated annual variation.
         """
 
         phase_shift = 18
@@ -110,8 +133,10 @@ class SeasonalVariationF2:
         """
         Calculates the semi-annual variation component of NmF2.
 
-        Returns:
-            float: The calculated semi-annual variation.
+        Returns
+        -------
+        semi_annual_variation : float
+            The calculated semi-annual variation.
         """
         phase_shift = 6
 
@@ -124,8 +149,10 @@ class SeasonalVariationF2:
         """
         Calculates the total seasonal variation of NmF2 by combining annual and semi-annual variations.
 
-        Returns:
-            float: The calculated seasonal variation of NmF2.
+        Returns
+        -------
+        seasonal_variation_F2 : float
+            The calculated seasonal variation of NmF2.
         """
         annual_variation = self.calculate_annual_variation()
         semi_annual_variation = self.calculate_semi_annual_variation()
@@ -137,13 +164,51 @@ class SeasonalVariationF2:
 
 
 class GeomagneticFieldDependencyF3:
+    """
+    Calculates the geomagnetic field dependency for the Neustrelitz Peak Density Model (NPDM).
+
+    The geomagnetic field dependency is modeled as a function of geomagnetic latitude.
+
+    ...
+
+    Attributes
+    ----------
+    geommagnetic_latitude : float
+        The geomagnetic latitude for which the dependency is calculated.
+    coefficients : list 
+        Coefficients used in the NPDM model for geomagnetic field dependency calculations.
+
+    Methods
+    ----------
+    calculate_geomagentic_field_dependency()
+        Calculates the geomagnetic field dependency
+    """
+
     def __init__(self, geommagnetic_latitude: float, coefficients: list):
+        """
+        Initializes the GeomagneticFieldDependencyF3 instance.
+
+        Parameters
+        ----------
+        geommagnetic_latitude : float
+            The geomagnetic latitude for which the dependency is calculated.
+        coefficients : list 
+            Coefficients used in the NPDM model for geomagnetic field dependency calculations.
+        """
         self.geommagnetic_latitude = geommagnetic_latitude
         self.coefficients = coefficients
 
     def calculate_geomagentic_field_dependency(self) -> float:
+        """
+        Calculates the geomagnetic field dependency based on the provided coefficients and geomagnetic latitude.
+
+        Returns
+        -------
+        geomagentic_field_dependency_F3 : float
+            The calculated geomagnetic field dependency.
+        """
         geomagentic_field_dependency_F3 = 1 + \
-            (self.coefficients[8] * math.cos(geommagnetic_latitude))
+            (self.coefficients[8] * math.cos(self.geommagnetic_latitude))
 
         return geomagentic_field_dependency_F3
 
