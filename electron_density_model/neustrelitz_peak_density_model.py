@@ -214,43 +214,122 @@ class GeomagneticFieldDependencyF3:
 
 
 class IonizationCrestsF4:
+    """
+    Calculates the ionization crest factors for the Neustrelitz Peak Density Model (NPDM).
+
+    The ionization crest factors represent the ionization crests at specific geomagnetic latitudes and local times.
+
+    ...
+
+    Attributes
+    ----------
+    geommagnetic_latitude : float
+        The geomagnetic latitude for which the ionization crest factors are calculated.
+    local_time_hours : int 
+        The local time (hours) for which the ionization crest factors are calculated.
+    coefficients : list 
+        Coefficients used in the NPDM model for ionization crest factor calculations.
+
+    Methods
+    ----------
+    calculate_half_width()
+        Calculates the half-width parameter for the ionization crest factor calculations.
+    calculate_ionization_crest_1()
+        Calculates the ionization crest factor for the northward crest at 16°N.
+    calculate_ionization_crest_2()
+        Calculates the ionization crest factor for the southward crest at -15°N.
+    calculate_ionization_crest_F4()
+        Calculates the overall ionization crest factor based on the provided coefficients, geomagnetic latitude, and local time.
+
+    """
+
     def __init__(self, geommagnetic_latitude: float, local_time_hours: int, coefficients: list):
+        """
+        Initializes the IonizationCrestsF4 instance.
+
+        Parameters
+        ----------
+        geommagnetic_latitude : float
+            The geomagnetic latitude for which the ionization crest factors are calculated.
+        local_time_hours : int 
+            The local time (hours) for which the ionization crest factors are calculated.
+        coefficients : list 
+            Coefficients used in the NPDM model for ionization crest factor calculations.
+        """
+
         self.geommagnetic_latitude = geommagnetic_latitude
         self.local_time_hours = local_time_hours
         self.coefficients = coefficients
 
-    def calculate_half_widths(self) -> float:
-        coefficient_local_time = 12
+    def calculate_half_width(self) -> float:
+        """
+        Calculates the half-width parameter for ionization crest factor calculations.
+
+        Returns
+        -------
+        half_width : float
+            The calculated half-width parameter.
+        """
+
+        coefficient_half_width_time = 12
 
         half_width = 20 - 10 * \
-            math.exp(-((self.local_time_hours - 14) **
-                     2 / (2 * coefficient_local_time**2)))
+            math.exp(-((self.local_time_hours - 14)**2 /
+                     (2 * coefficient_half_width_time**2)))
 
         return half_width
 
     def calculate_ionization_crest_1(self) -> float:
-        half_width = self.calculate_half_widths()
+        """
+        Calculates the ionization crest factor for the northward crest at 16°N.
+
+        Returns
+        -------
+        ionization_crest_1 : float
+            The calculated ionization crest factor for the northward crest.
+        """
+
+        half_width = self.calculate_half_width()
         northward_crest_degrees = 16
 
         ionization_crest_1 = - \
-            ((self.geommagnetic_latitude - northward_crest_degrees)
-             ** 2 / (2 * half_width**2))
+            ((self.geommagnetic_latitude - northward_crest_degrees) ** 2
+             / (2 * half_width**2))
 
         return ionization_crest_1
 
     def calculate_ionization_crest_2(self) -> float:
-        half_width = self.calculate_half_widths()
+        """
+        Calculates the ionization crest factor for the southward crest at -15°N.
+
+        Returns
+        -------
+        ionization_crest_2 : float
+            The calculated ionization crest factor for the southward crest.
+        """
+
+        half_width = self.calculate_half_width()
         southward_crest_degrees = -15
 
         ionization_crest_2 = - \
-            ((self.geommagnetic_latitude - southward_crest_degrees)
-             ** 2 / (2 * half_width**2))
+            ((self.geommagnetic_latitude - southward_crest_degrees) ** 2
+             / (2 * half_width**2))
 
         return ionization_crest_2
 
     def calculate_ionization_crest_F4(self) -> float:
+        """
+        Calculates the overall ionization crest factor based on the provided coefficients, geomagnetic latitude, and local time.
+
+        Returns
+        -------
+        ionization_crest_F4 : float
+            The calculated overall ionization crest factor.
+        """
+
         ionization_crest_1 = self.calculate_ionization_crest_1()
         ionization_crest_2 = self.calculate_ionization_crest_2()
+
         ionization_crest_F4 = 1 + self.coefficients[9] * math.exp(
             ionization_crest_1) + self.coefficients[10] * math.exp(ionization_crest_2)
 
@@ -258,19 +337,105 @@ class IonizationCrestsF4:
 
 
 class SolarActivityF5:
+    """
+    Calculates the strong solar activity dependence for the Neustrelitz Peak Density Model (NPDM).
+
+    The strong solar activity dependence is modeled as a function of solar radio flux F10.7.
+
+    ...
+
+    Attributes
+    ----------
+    solar_flux_F107 : float
+        The solar radio flux F10.7 for which the solar activity dependence is calculated.
+    coefficients : list 
+        Coefficients used in the NPDM model for solar activity dependence calculations.
+
+    Methods
+    ----------
+    calculate_solar_activity_F5()
+        Calculates the solar activity dependence based on the provided coefficients and solar radio flux F10.7.
+
+    """
+
     def __init__(self, solar_flux_F107: float, coefficients: list):
+        """
+        Initializes the SolarActivityF5 instance.
+
+        Parameters
+        ----------
+        solar_flux_F107 : float
+            The solar radio flux F10.7 for which the solar activity dependence is calculated.
+        coefficients : list 
+            Coefficients used in the NPDM model for solar activity dependence calculations.
+        """
         self.solar_flux_F107 = solar_flux_F107
         self.coefficients = coefficients
 
     def calculate_solar_activity_F5(self) -> float:
+        """
+        Calculates the strong solar activity dependence based on the provided coefficients and solar radio flux F10.7 and delta F10.7.
+
+        Returns
+        -------
+        solar_activity_F5 : float
+            The calculated strong solar activity dependence.
+        """
+        delta_F107 = 12
+
         solar_activity_F5 = self.coefficients[11] + \
-            self.coefficients[12] * self.solar_flux_F107
+            self.coefficients[12] * self.solar_flux_F107 * delta_F107
 
         return solar_activity_F5
 
 
 class NeustrelitzPeakDensityModel:
+    """
+    Calculates the peak electron density using the Neustrelitz Peak Density Model (NPDM).
+
+    The NPDM combines various factors and coefficients to estimate the peak electron density (NmF2)
+    in the ionosphere under different conditions.
+
+    ...
+
+    Attributes
+    ----------
+    local_time_F1 : float
+        The local time variation factor (F1) calculated by the model.
+    seasonal_variation_F2 : float
+        The seasonal variation factor (F2) calculated by the model.
+    geomagentic_field_dependency_F3 : float
+        The geomagnetic field dependency factor (F3) calculated by the model.
+    ionization_crest_F4 : float
+        The ionization crest factor (F4) calculated by the model.
+    solar_activity_F5 : float
+        The strong solar activity dependence factor (F5) calculated by the model.
+
+    Methods
+    ----------
+    calculate_neustrelitz_peak_electron_model()
+        Calculates the peak electron density (NmF2) using the provided factors and coefficients.
+
+    """
+
     def __init__(self, local_time_F1: float, seasonal_variation_F2: float, geomagentic_field_dependency_F3: float, ionization_crest_F4: float, solar_activity_F5: float):
+        """
+        Initializes the NeustrelitzPeakDensityModel instance with factors and coefficients.
+
+        Parameters
+        ----------
+        local_time_F1 : float
+            The local time variation factor (F1) calculated by the model.
+        seasonal_variation_F2 : float
+            The seasonal variation factor (F2) calculated by the model.
+        geomagentic_field_dependency_F3 : float
+            The geomagnetic field dependency factor (F3) calculated by the model.
+        ionization_crest_F4 : float
+            The ionization crest factor (F4) calculated by the model.
+        solar_activity_F5 : float
+            The strong solar activity dependence factor (F5) calculated by the model.
+        """
+
         self.local_time_F1 = local_time_F1
         self.seasonal_variation_F2 = seasonal_variation_F2
         self.geomagentic_field_dependency_F3 = geomagentic_field_dependency_F3
@@ -278,12 +443,30 @@ class NeustrelitzPeakDensityModel:
         self.solar_activity_F5 = solar_activity_F5
 
     def calculate_neustrelitz_peak_electron_model(self) -> float:
+        """
+        Calculates the peak electron density (NmF2) using the provided factors and coefficients.
+
+        Returns
+        -------
+        neustrelitz_peak_electron_model : float
+            The calculated peak electron density (NmF2).
+        """
         neustrelitz_peak_electron_model = self.local_time_F1 * self.seasonal_variation_F2 * \
             self.geomagentic_field_dependency_F3 * \
             self.ionization_crest_F4 * self.solar_activity_F5
 
         return neustrelitz_peak_electron_model
 
+
+"""
+TO-DOS:
+- find out what units (degrees or radians) are used in the F4 class
+- find out what the coefficients are
+- find open API sources for the data pipeline
+- create & implement intermediary conversion functions (ex. geographic latitude to geomagnetic latitude, etc.)
+- plotting the results
+
+"""
 
 # Testing the classes
 
