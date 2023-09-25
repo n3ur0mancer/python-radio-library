@@ -2,16 +2,77 @@ import math
 
 
 class LocalTimeF1:
+    """
+    Represents a class for calculating variations in local time, solar zenith angles, and local time variation factor F1.
+
+    This class provides methods to calculate diurnal, semi-diurnal, and ter-diurnal harmonic components related to variations in local time,
+    various angles related to solar zenith angles based on geographic latitude and sun declination,
+    the local time at the beginning of the bite out, summer daytime bite-out effect,
+    and integrates these results to compute the local time variation factor F1.
+
+    Attributes
+    ----------
+    local_time_hours : int
+        The local time in hours for which variations are calculated.
+    latitude_radians : float
+        The geographic latitude in radians.
+    sun_declination_radians : float
+        The sun's declination angle in radians.
+    day_of_year : int
+        The day of the year for which calculations are performed.
+    coefficients : list
+        Coefficients used in the F1 calculation.
+
+    Methods
+    -------
+    calculate_local_time_variations() -> Tuple[float, float, float]
+        Calculates diurnal, semi-diurnal, and ter-diurnal harmonic components related to variations in local time.
+    calculate_solar_zenith_angles() -> Tuple[float, float]
+        Calculates solar zenith angles and corrections based on latitude and sun declination.
+    calculate_local_time_at_beginning_of_bite_out() -> float
+        Calculates the local time at the beginning of the bite-out phenomenon.
+    calculate_summer_daytime_bite_out() -> float
+        Models the summer daytime bite-out effect based on various parameters.
+    calculate_local_time_F1() -> float
+        Integrates the results from previous calculations to compute the local time variation factor F1.
+    """
+
     def __init__(self, local_time_hours: int, latitude_radians: float, sun_declination_radians: float, day_of_year: int, coefficients: list):
+        """
+        Initializes a LocalTimeF1 instance with the given parameters.
+
+        Parameters
+        ----------
+        local_time_hours : int
+            The local time in hours for which variations are calculated.
+        latitude_radians : float
+            The geographic latitude in radians.
+        sun_declination_radians : float
+            The sun's declination angle in radians.
+        day_of_year : int
+            The day of the year for which calculations are performed.
+        coefficients : list
+            Coefficients used in the F1 calculation.
+        """
         self.local_time_hours = local_time_hours
         self.latitude_radians = latitude_radians
         self.sun_declination_radians = sun_declination_radians
         self.day_of_year = day_of_year
         self.coefficients = coefficients
 
-    # method calculates diurnal, semi-diurnal, and ter-diurnal harmonic components related to variations in local time
+    def calculate_local_time_variations(self) -> tuple[float, float, float]:
+        """
+        Calculates diurnal, semi-diurnal, and ter-diurnal harmonic components related to variations in local time.
 
-    def calculate_local_time_variations(self) -> float:
+        Returns
+        -------
+        variation_diurnal : float
+            The diurnal harmonic component of local time variation.
+        variation_semi_diurnal : float
+            The semi-diurnal harmonic component of local time variation.
+        variation_ter_diurnal : float
+            The ter-diurnal harmonic component of local time variation.
+        """
         phase_shift = 14
 
         variation_diurnal = (
@@ -21,12 +82,20 @@ class LocalTimeF1:
 
         return variation_diurnal, variation_semi_diurnal, variation_ter_diurnal
 
-    # method calculates various angles related to solar zenith angles based on geographic latitude and sun declination
+    def calculate_solar_zenith_angles(self) -> tuple[float, float]:
+        """
+        Calculates solar zenith angles and corrections based on geographic latitude and sun declination.
 
-    def calculate_solar_zenith_angles(self) -> float:
+        Returns
+        -------
+        cos_adjusted_zenith_angle : float
+            The cosine of the adjusted solar zenith angle.
+        cos_further_adjusted_zenith_angle : float
+            The cosine of the further adjusted solar zenith angle.
+        """
         solar_zenith_angle_correction = 0.4  # PF1
 
-        cos_solar_zenith_angle = (math.sin(self.latitude_radians) * math.sin(self.sun_declination_radians))+(
+        cos_solar_zenith_angle = (math.sin(self.latitude_radians) * math.sin(self.sun_declination_radians)) + (
             math.cos(self.latitude_radians) * math.cos(self.sun_declination_radians))
 
         cos_adjusted_zenith_angle = math.cos(cos_solar_zenith_angle) - (
@@ -37,17 +106,29 @@ class LocalTimeF1:
 
         return cos_adjusted_zenith_angle, cos_further_adjusted_zenith_angle
 
-    # method calculates the local time at the beginning of the bite out
-
     def calculate_local_time_at_beginning_of_bite_out(self):
-        local_time_at_beginning_of_bite_out = 13 + 1.5 * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * \
-            (self.latitude_radians / math.fabs(self.latitude_radians))
+        """
+        Calculates the local time at the beginning of the bite-out phenomenon.
+
+        Returns
+        -------
+        local_time_at_beginning_of_bite_out : float
+            The local time at the beginning of the bite-out phenomenon.
+        """
+        local_time_at_beginning_of_bite_out = 13 + 1.5 * math.cos((2 * math.pi * (self.day_of_year - 181)) / 365.25) * (
+            self.latitude_radians / math.fabs(self.latitude_radians))
 
         return local_time_at_beginning_of_bite_out
 
-    # method models the summer daytime bite-out effect using several mathematical expressions involving latitude, day of the year, and other parameters
-
     def calculate_summer_daytime_bite_out(self) -> float:
+        """
+        Models the summer daytime bite-out effect using several mathematical expressions involving latitude, day of the year, and other parameters.
+
+        Returns
+        -------
+        summer_daytime_bite_out : float
+            The modeled summer daytime bite-out effect.
+        """
         local_time_at_beginning_of_bite_out = self.calculate_local_time_at_beginning_of_bite_out()
         fixed_geographic_latitude = 45
         gaussian_half_width_degree = 14
@@ -58,9 +139,15 @@ class LocalTimeF1:
 
         return summer_daytime_bite_out
 
-    # method integrates the results from the previous calculations to compute the local time variation factor F1
-
     def calculate_local_time_F1(self) -> float:
+        """
+        Integrates the results from previous calculations to compute the local time variation factor F1.
+
+        Returns
+        -------
+        local_time_F1 : float
+            The calculated local time variation factor F1.
+        """
         variation_diurnal, variation_semi_diurnal, variation_ter_diurnal = self.calculate_local_time_variations()
         cos_adjusted_zenith_angle, cos_further_adjusted_zenith_angle = self.calculate_solar_zenith_angles()
         summer_daytime_bite_out = self.calculate_summer_daytime_bite_out()
